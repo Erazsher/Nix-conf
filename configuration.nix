@@ -67,8 +67,91 @@
     hardware.bluetooth.enable = true;
 
   # Enable sound.
-   sound.enable = true;
-   hardware.pulseaudio.enable = true;
+  # sound.enable = false;
+  # hardware.pulseaudio.enable = true;
+  
+  # pipewire
+  # rtkit is optional but recommended
+    security.rtkit.enable = true;
+    services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  # If you want to use JACK applications, uncomment this
+  #jack.enable = true;
+
+  # use the example session manager (no others are packaged yet so this is enabled by default,
+  # no need to redefine it in your config for now)
+  #media-session.enable = true;
+  };
+
+  services.pipewire  = {
+  media-session.config.bluez-monitor.rules = [
+    {
+      # Matches all cards
+      matches = [ { "device.name" = "~bluez_card.*"; } ];
+      actions = {
+        "update-props" = {
+          "bluez5.reconnect-profiles" = [ "hfp_hf" "hsp_hs" "a2dp_sink" ];
+          # mSBC is not expected to work on all headset + adapter combinations.
+          "bluez5.msbc-support" = true;
+          # SBC-XQ is not expected to work on all headset + adapter combinations.
+          "bluez5.sbc-xq-support" = true;
+        };
+      };
+    }
+    {
+      matches = [
+        # Matches all sources
+        { "node.name" = "~bluez_input.*"; }
+        # Matches all outputs
+        { "node.name" = "~bluez_output.*"; }
+      ];
+      actions = {
+        "node.pause-on-idle" = false;
+      };
+    }
+  ];
+};
+  
+  services.pipewire = {
+  config.pipewire = {
+    "context.objects" = [
+      {
+        # A default dummy driver. This handles nodes marked with the "node.always-driver"
+        # properyty when no other driver is currently active. JACK clients need this.
+        factory = "spa-node-factory";
+        args = {
+          "factory.name"     = "support.node.driver";
+          "node.name"        = "Dummy-Driver";
+          "priority.driver"  = 8000;
+        };
+      }
+      {
+        factory = "adapter";
+        args = {
+          "factory.name"     = "support.null-audio-sink";
+          "node.name"        = "Microphone-Proxy";
+          "node.description" = "Microphone";
+          "media.class"      = "Audio/Source/Virtual";
+          "audio.position"   = "MONO";
+        };
+      }
+      {
+        factory = "adapter";
+        args = {
+          "factory.name"     = "support.null-audio-sink";
+          "node.name"        = "Main-Output-Proxy";
+          "node.description" = "Main Output";
+          "media.class"      = "Audio/Sink";
+          "audio.position"   = "FL,FR";
+        };
+      }
+    ];
+  };
+};
+  
 
   # Enable touchpad support (enabled default in most desktopManager).
    services.xserver.libinput.enable = true;
@@ -93,10 +176,13 @@
      libreoffice
      mpv
      firefox
+     ungoogled-chromium
      keepassxc
      #Extras
      papirus-icon-theme
-     arc-theme  
+     arc-theme 
+     blueman
+     pavucontrol 
    ];
 
   # Some programs need SUID wrappers, can be configured further or are
