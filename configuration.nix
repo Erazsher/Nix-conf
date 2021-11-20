@@ -51,12 +51,15 @@
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
   hardware.opengl.driSupport32Bit = true;
-  services.xserver.videoDrivers = [ "intel" ];
-  services.xserver.deviceSection = ''
-    Option "DRI" "2"
-    Option "TearFree" "true"
-  '';
-
+  # services.xserver.videoDrivers = [ "intel" ];
+  # services.xserver.deviceSection = ''
+  #   Option "DRI" "2"
+  #   Option "TearFree" "true"
+  # '';
+  # recomended by Nix-manual
+  services.xserver.videoDrivers = [ "modesetting" ];
+  services.xserver.useGlamor = true;
+  
   # Configure keymap in X11
    services.xserver.layout = "us";
    services.xserver.xkbOptions = "eurosign:e";
@@ -84,6 +87,16 @@
   # use the example session manager (no others are packaged yet so this is enabled by default,
   # no need to redefine it in your config for now)
   #media-session.enable = true;
+  };
+  
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
   };
 
   services.pipewire  = {
@@ -174,7 +187,7 @@
      htop
      # gui-tools
      libreoffice
-     mpv
+     celluloid
      firefox
      keepassxc
      #Extras
@@ -186,7 +199,14 @@
      rofi
      archiver
      wine-staging
+     intel-media-driver
+     microcodeIntel
+     xorg.xf86videointel
    ];
+
+   nixpkgs.config.packageOverrides = pkgs: {
+    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+   };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -215,12 +235,12 @@
 
       # 100 being the maximum, limit the speed of my CPU to reduce
       # heat and increase battery usage:
-      CPU_MAX_PERF_ON_AC=100;
+      CPU_MAX_PERF_ON_AC=90;
       CPU_MAX_PERF_ON_BAT=60;
     };
   };
 
-  # To get rid of old generations & general cleanup
+  # To get rid of old generations
   nix.gc = {
   automatic = true;
   dates = "weekly";
