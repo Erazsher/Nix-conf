@@ -51,14 +51,14 @@
   services.xserver.displayManager.lightdm.enable = true;
   #services.xserver.desktopManager.xfce.enable = true;
   hardware.opengl.driSupport32Bit = true;
-   services.xserver.videoDrivers = [ "intel" ];
-   services.xserver.deviceSection = ''
-     Option "DRI" "2"
-     Option "TearFree" "true"
-   '';
+  # services.xserver.videoDrivers = [ "intel" ];
+  # services.xserver.deviceSection = ''
+  #   Option "DRI" "2"
+  #   Option "TearFree" "true"
+  # '';
   # recomended by Nix-manual
-  # services.xserver.videoDrivers = [ "modesetting" ];
-  # services.xserver.useGlamor = true;
+    services.xserver.videoDrivers = [ "modesetting" ];
+    services.xserver.useGlamor = true;
   
   # Configure keymap in X11
    services.xserver.layout = "us";
