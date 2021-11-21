@@ -49,16 +49,16 @@
 
   # Enable the XFCE Desktop Environment.
   services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
+  #services.xserver.desktopManager.xfce.enable = true;
   hardware.opengl.driSupport32Bit = true;
-  # services.xserver.videoDrivers = [ "intel" ];
-  # services.xserver.deviceSection = ''
-  #   Option "DRI" "2"
-  #   Option "TearFree" "true"
-  # '';
+   services.xserver.videoDrivers = [ "intel" ];
+   services.xserver.deviceSection = ''
+     Option "DRI" "2"
+     Option "TearFree" "true"
+   '';
   # recomended by Nix-manual
-  services.xserver.videoDrivers = [ "modesetting" ];
-  services.xserver.useGlamor = true;
+  # services.xserver.videoDrivers = [ "modesetting" ];
+  # services.xserver.useGlamor = true;
   
   # Configure keymap in X11
    services.xserver.layout = "us";
@@ -202,6 +202,16 @@
      intel-media-driver
      microcodeIntel
      xorg.xf86videointel
+     #Window-manager
+     openbox
+     termite
+     obconf
+     lxappearance
+     menumaker
+     nitrogen    
+     picom
+     tint2
+     gnome.nautilus
    ];
 
    nixpkgs.config.packageOverrides = pkgs: {
@@ -218,6 +228,8 @@
 
   # List services that you want to enable:
   services.blueman.enable = true;
+  services.xserver.windowManager.openbox.enable = true;
+  services.gvfs.enable = true;
   # tlp
   # services.tlp.enable = true;
   services.tlp = {
