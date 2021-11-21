@@ -51,14 +51,14 @@
   services.xserver.displayManager.lightdm.enable = true;
   #services.xserver.desktopManager.xfce.enable = true;
   hardware.opengl.driSupport32Bit = true;
-  # services.xserver.videoDrivers = [ "intel" ];
-  # services.xserver.deviceSection = ''
-  #   Option "DRI" "2"
-  #   Option "TearFree" "true"
-  # '';
+   services.xserver.videoDrivers = [ "intel" ];
+   services.xserver.deviceSection = ''
+     Option "DRI" "2"
+     Option "TearFree" "true"
+   '';
   # recomended by Nix-manual
-    services.xserver.videoDrivers = [ "modesetting" ];
-    services.xserver.useGlamor = true;
+  # services.xserver.videoDrivers = [ "modesetting" ];
+   services.xserver.useGlamor = true;
   
   # Configure keymap in X11
    services.xserver.layout = "us";
@@ -98,6 +98,7 @@
       libvdpau-va-gl
     ];
   };
+  hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ vaapiIntel ];
 
   services.pipewire  = {
   media-session.config.bluez-monitor.rules = [
@@ -184,12 +185,15 @@
      curl
      git
      neofetch
-     htop
+     htop 
+     killall
      # gui-tools
      libreoffice
-     celluloid
+    #celluloid
      firefox
      keepassxc
+     notepadqq
+     mplayer
      #Extras
      tlp
      papirus-icon-theme
@@ -217,7 +221,19 @@
    nixpkgs.config.packageOverrides = pkgs: {
     vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
    };
+  fonts.fonts = with pkgs; [
+  noto-fonts
+  noto-fonts-cjk
+  noto-fonts-emoji
+  liberation_ttf
+  fira-code
+  fira-code-symbols
+  mplus-outline-fonts
+  dina-font
+  proggyfonts
+  ];
 
+ 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -230,6 +246,9 @@
   services.blueman.enable = true;
   services.xserver.windowManager.openbox.enable = true;
   services.gvfs.enable = true;
+  # Setting lightdm background--->point to filename
+  services.xserver.displayManager.lightdm.background = /home/san/Pictures/Wallpapers/WallBW.png;
+
   # tlp
   # services.tlp.enable = true;
   services.tlp = {
@@ -251,6 +270,8 @@
       CPU_MAX_PERF_ON_BAT=60;
     };
   };
+
+  nix.autoOptimiseStore = true; #to optimise newer packages
 
   # To get rid of old generations
   nix.gc = {
