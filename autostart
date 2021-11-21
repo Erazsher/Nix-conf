@@ -1,4 +1,0 @@
-nitrogen --restore &
-tint2 &
-picom --experimental-backend  &
-nm-applet &
