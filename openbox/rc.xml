@@ -235,6 +235,13 @@
 	 <command>firefox</command>
        </action>
      </keybind>
+     <!-- Screenshot -->
+    <keybind key="Print">
+      <action name="Execute">
+        <command>sh -c "import -window root ~/Pictures/$(date '+%Y%m%d-%H%M%S').png"</command>
+      </action>
+    </keybind>
+
     <keybind key="W-t">
        <action name="Execute">
        <command>termite </command>
