@@ -187,10 +187,14 @@
      neofetch
      htop 
      killall
+     ffmpeg
      # gui-tools
      libreoffice
+     sxiv
+     
     #celluloid
      firefox
+     okular
      keepassxc
      notepadqq
      mplayer
@@ -207,8 +211,10 @@
      microcodeIntel
      xorg.xf86videointel
      #Window-manager
+     st
      openbox
      termite
+     terminator
      obconf
      lxappearance
      menumaker
@@ -216,10 +222,31 @@
      picom
      tint2
      gnome.nautilus
+     #patching
+  (st.overrideAttrs (oldAttrs: rec {
+    patches = [
+      # You can specify local patches
+      # Fetch them directly from `st.suckless.org`
+      # (fetchpatch {
+      #  url = "https://st.suckless.org/patches/gruvbox/st-gruvbox-dark-0.8.2.diff";
+      #  sha256 = "0kl5pw0pi1n1sxvqwbk6xw5z9wywzsqkk1z97qq7049arn8f08lp";
+      # })
+      (fetchpatch {
+        url = "https://st.suckless.org/patches/ligatures/0.8.3/st-ligatures-20200430-0.8.3.diff";
+        sha256 = "67b668c77677bfcaff42031e2656ce9cf173275e1dfd6f72587e8e8726298f09";
+      })
+     # })
+    ];
+   }))
+
+
    ];
 
    nixpkgs.config.packageOverrides = pkgs: {
     vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+   
+   
+
    };
   fonts.fonts = with pkgs; [
   noto-fonts
@@ -272,6 +299,7 @@
   };
 
   nix.autoOptimiseStore = true; #to optimise newer packages
+ 
 
   # To get rid of old generations
   nix.gc = {
