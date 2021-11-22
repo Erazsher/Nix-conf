@@ -231,10 +231,10 @@
       #  url = "https://st.suckless.org/patches/gruvbox/st-gruvbox-dark-0.8.2.diff";
       #  sha256 = "0kl5pw0pi1n1sxvqwbk6xw5z9wywzsqkk1z97qq7049arn8f08lp";
       # })
-      (fetchpatch {
-        url = "https://st.suckless.org/patches/ligatures/0.8.3/st-ligatures-20200430-0.8.3.diff";
-        sha256 = "67b668c77677bfcaff42031e2656ce9cf173275e1dfd6f72587e8e8726298f09";
-      })
+      # (fetchpatch {
+      #  url = "https://st.suckless.org/patches/ligatures/0.8.3/st-ligatures-20200430-0.8.3.diff";
+      #  sha256 = "67b668c77677bfcaff42031e2656ce9cf173275e1dfd6f72587e8e8726298f09";
+      #})
      # })
     ];
    }))
